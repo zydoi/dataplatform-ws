@@ -3,6 +3,7 @@ package com.bimoku.dataplatform.resource;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,6 +17,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bimoku.dataplatform.entity.dto.BookshelfInfoDTO;
+import com.bimoku.dataplatform.entity.dto.SimilarUserDTO;
+import com.bimoku.dataplatform.entity.dto.UserActionDTO;
 import com.bimoku.dataplatform.entity.dto.UserDTO;
 import com.bimoku.dataplatform.entity.type.CollectionStatus;
 import com.bimoku.dataplatform.service.UserService;
@@ -48,17 +52,45 @@ public class UserResource {
 	@Path(value = "/user/{name}/followers")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<UserDTO> getFollowers(@PathParam("name")String name) {
+	public List<UserDTO> getFollowers(@PathParam("name")String name, @QueryParam("start") @DefaultValue(value = "0") int start,
+			@PathParam("start") @DefaultValue(value = "10") int size) {
 		logger.info("Get Followers of User: " + name );
-		return service.findFollowersByName(name);
+		return service.findFollowersByName(name, start, size);
 	}
 
 	@Path(value = "/user/{name}/followings")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<UserDTO> getFollowings(@PathParam("name") String name) {
+	public List<UserDTO> getFollowings(@PathParam("name") String name, @QueryParam("start") @DefaultValue(value = "0") int start,
+			@PathParam("start") @DefaultValue(value = "10") int size) {
 		logger.info("Get Followings of User: " + name );
-		return service.findFollowingsByName(name);
+		return service.findFollowingsByName(name, start, size);
+	}
+	
+	@Path(value = "/user/{user}/actions") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<UserActionDTO> getUserActions(@PathParam("user") String name, @QueryParam("start") @DefaultValue(value = "0") int start,
+			@PathParam("start") @DefaultValue(value = "10") int size) {
+		logger.info("Get User: " + name + "actions" );
+		return service.getUserAction(name, start, size);
+	}
+	
+	@Path(value = "/user/{user}/bookshelf") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public BookshelfInfoDTO getUserBookshelf(@PathParam("user") String name) {
+		logger.info("Get User: " + name + "actions" );
+		return service.getBookShelfInfo(name);
+	}
+	
+	@Path(value = "/user/{user}/similar") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<SimilarUserDTO> getSimilarBook(@PathParam("user") String name, @QueryParam("start") @DefaultValue(value = "0") int start,
+			@PathParam("start") @DefaultValue(value = "10") int size) {
+		logger.info("Get similar users for User: " + name + "" );
+		return service.findSimilarPeople(name, start, size);
 	}
 	
 	@Path(value = "/user/{user}/follows")
@@ -100,4 +132,12 @@ public class UserResource {
 		logger.info("User: " + user + " likes " + "Book: " + isbn );
 		service.likeBook(user, isbn);
 	}
+	
+	@Path(value = "/user/{user}/clear")
+	@DELETE
+	public void clearSearchHistory(@PathParam("user") String user) {
+		logger.info("User: " + user + " clear search history");
+		service.clearSearchHistory(user);
+	}
+	
 }
