@@ -53,7 +53,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserDTO> getFollowers(@PathParam("name")String name, @QueryParam("start") @DefaultValue(value = "0") int start,
-			@PathParam("start") @DefaultValue(value = "10") int size) {
+			@QueryParam("size") @DefaultValue(value = "10") int size) {
 		logger.info("Get Followers of User: " + name );
 		return service.findFollowersByName(name, start, size);
 	}
@@ -62,7 +62,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserDTO> getFollowings(@PathParam("name") String name, @QueryParam("start") @DefaultValue(value = "0") int start,
-			@PathParam("start") @DefaultValue(value = "10") int size) {
+			@QueryParam("size") @DefaultValue(value = "10") int size) {
 		logger.info("Get Followings of User: " + name );
 		return service.findFollowingsByName(name, start, size);
 	}
@@ -71,7 +71,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserActionDTO> getUserActions(@PathParam("user") String name, @QueryParam("start") @DefaultValue(value = "0") int start,
-			@PathParam("start") @DefaultValue(value = "10") int size) {
+			@QueryParam("size") @DefaultValue(value = "10") int size) {
 		logger.info("Get User: " + name + "actions" );
 		return service.getUserAction(name, start, size);
 	}
@@ -88,7 +88,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SimilarUserDTO> getSimilarBook(@PathParam("user") String name, @QueryParam("start") @DefaultValue(value = "0") int start,
-			@PathParam("start") @DefaultValue(value = "10") int size) {
+			@QueryParam("size") @DefaultValue(value = "10") int size) {
 		logger.info("Get similar users for User: " + name + "" );
 		return service.findSimilarPeople(name, start, size);
 	}
